@@ -95,7 +95,7 @@ btp(2)%material_path(3) = '/home/kduru/Material/OK_homog_rho_B2'/
   nplanes = 1,
   plane_axis = 'qs',
   plane_coord = 1, 
-  plane_name = 'plane_2up_y0', 
+  plane_name = 'y0', 
   plane_stride = 1,
   plane_file_directory = 'plane'
 /
