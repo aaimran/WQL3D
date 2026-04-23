@@ -1,8 +1,8 @@
 ! waveqlab3d input file: test problem for mms on cartesian grid with friction
 
 &problem_list
- name = 'withers_elastic_ver-x_traditional-6_res-100m_pml-2km', 
- response = 'elastic',
+ name = 'withers_anelastic-Qf4-0.0_ver-x_upwind-6_res-100m_pml-2km', 
+ response = 'anelastic-Qf',
  problem = 'TPV5'
  nblocks = 2,
  t_final = 10d0, 
@@ -10,12 +10,18 @@
  coupling = 'locked', 
  type_of_mesh = 'curvilinear', 
  material_source='hard-coded',	
- fd_type = 'traditional',
+ fd_type = 'upwind',
  order = 6,
  interpol = F,
  use_topography = T,
  w_stride = 1, 
  w_fault = F /
+
+&anelastic_Qf_list
+ c = 14.4328d0,
+ gamma = 0.0,
+ f_trans = 1.0,
+ fref = 1.0 /
 
 &block_list
 btp(1)%nqrs = 101, 151, 201,
@@ -67,9 +73,7 @@ btp(2)%material_path(3) = '/home/kduru/Material/OK_homog_rho_B2'/
 !---end:tensor_listU---
 
 !---begin:tensor_listV---
-'cosine' 0.2d0 0d0 0d0 0d0 0d0 0d0 10d0 0d0 -5d0 1.8d0 -5d0 0
 !---end:tensor_listV---  
-
 
 &mms_list
  use_mms = F /
@@ -82,31 +86,21 @@ btp(2)%material_path(3) = '/home/kduru/Material/OK_homog_rho_B2'/
  output_fields_block2 = F,
  stride_fields = 1,
  station_xyz_index = T,
- station_list = 'infile',
- station_list_file = 'station_list_0y.txt',
- station_file_directory = 'dat_1tpx_100m',
+ station_list = 'exfile',
+ station_list_file = 'station_list.txt',
+ station_file_directory = 'dat_4up_100m',
  output_station_info = F
  /
 
-!---begin:station_listU---
- -0d0 -0.89d0 0d0
- -1d0 0d0 2d0
-  -1d0 -0.1365d0 2d0	
- -1d0 -0.49d0 -1d0
- -3d0 -0.2d0 0d0
- -3.5d0 0d0 -3.5d0	
- 0d0 -0.2d0 -3d0
-!---end:station_listU---
-
-!---begin:station_listV---
- 3d0 0d0 4d0
- 4d0 0d0 6d0
- 5d0 0d0 5d0
- 1d0 -0.49d0 1d0
- 3d0 -0.2d0 0d0
- 0d0 -0.2d0 3d0
-!---end:station_listV---
-
+&plane_output_list
+  enable_plane_output = T,
+  nplanes = 1,
+  plane_axis = 'qs',
+  plane_coord = 1, 
+  plane_name = 'plane_4up_y0', 
+  plane_stride = 1,
+  plane_file_directory = 'plane'
+/
 
 
 

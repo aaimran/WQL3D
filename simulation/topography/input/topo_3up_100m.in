@@ -1,57 +1,63 @@
 ! waveqlab3d input file: test problem for mms on cartesian grid with friction
 
 &problem_list
- name = 'data/topo_flat_100m', 
- response = 'elastic',
- problem = 'LOH1'
+ name = 'withers_anelastic-Qc8_ver-x_upwind-6_res-100m_pml-2km', 
+ response = 'anelastic-Q8',
+ problem = 'TPV5'
  nblocks = 2,
- t_final = 4d0, 
+ t_final = 10d0, 
  CFL = 0.5d0,
  coupling = 'locked', 
- type_of_mesh = 'curvilinear', !'cartesian',
+ type_of_mesh = 'curvilinear', 
  material_source='hard-coded',	
+ fd_type = 'upwind',
+ order = 6,
  interpol = F,
  use_topography = T,
- w_stride = 2, 
+ w_stride = 1, 
  w_fault = F /
 
+&anelastic_Q8_list
+ c    = 14.4328d0,
+ fref = 1.0d0 /
+
 &block_list
-btp(1)%nqrs = 101, 201, 201,
-btp(1)%aqrs = -10d0, -10d0, -10d0,
-btp(1)%bqrs =  0d0, 10d0,  10d0,
-btp(1)%rho_s_p = 2.67d0, 3.464d0, 6d0,
+btp(1)%nqrs = 101, 151, 201,
+btp(1)%aqrs = -10d0, 0d0, -10d0,
+btp(1)%bqrs =  0d0, 15d0,  10d0,
+btp(1)%rho_s_p = 2.7d0, 3.464d0, 6d0,
 btp(1)%lqrs = 1, 2, 1,
 btp(1)%rqrs = 0, 1, 1,
 btp(1)%pml_lqrs = T, F, T,
 btp(1)%pml_rqrs = F, T, T,
-btp(1)%npml = 6,
+btp(1)%npml = 20,
 btp(1)%lc = 1d0,
 btp(1)%rc = 0d0,
 btp(1)%profile_type= 'read_from_memomry_fractal',
 btp(1)%topography_type = 'read_topo_from_memory',
-btp(1)%faultsize = 211, 201,
-btp(1)%topography_path= '../inputfile/block1_alpha_0_01_101by201_1km.dat',
-btp(1)%profile_path= '../inputfile/seed2239_alpha_0_01_211by201_1km.dat',
+btp(1)%faultsize = 171, 201,
+btp(1)%topography_path= './input/block1_topo.dat',
+btp(1)%profile_path= './input/fault_topo.dat',
 btp(1)%material_path(1) = '/home/kduru/Material/OK_homog_lambda_B1',
 btp(1)%material_path(2) = '/home/kduru/Material/OK_homog_mu_B1', 
 btp(1)%material_path(3) = '/home/kduru/Material/OK_homog_rho_B1',
 
-btp(2)%nqrs = 101, 201, 201,
-btp(2)%aqrs =  0d0, -10d0, -10d0,
-btp(2)%bqrs =  10d0, 10d0,  10d0,
-btp(2)%rho_s_p = 2.67d0, 3.464d0, 6d0,
+btp(2)%nqrs = 101, 151, 201,
+btp(2)%aqrs =  0d0, 0d0, -10d0,
+btp(2)%bqrs =  10d0, 15d0,  10d0,
+btp(2)%rho_s_p = 2.7d0, 3.464d0, 6d0,
 btp(2)%lqrs = 0, 2, 1,
 btp(2)%rqrs = 1, 1, 1,
 btp(2)%pml_lqrs = F, F, T,
 btp(2)%pml_rqrs = T, T, T,
-btp(2)%npml = 6,
+btp(2)%npml = 20,
 btp(2)%lc = 0d0,
 btp(2)%rc = 1d0,
 btp(2)%profile_type= 'read_from_memomry_fractal',
 btp(2)%topography_type = 'read_topo_from_memory',
-btp(2)%faultsize = 211, 201,
-btp(2)%topography_path= '../inputfile/block2_alpha_0_01_101by201_1km.dat'
-btp(2)%profile_path= '../inputfile/seed2239_alpha_0_01_211by201_1km.dat',
+btp(2)%faultsize = 171, 201,
+btp(2)%topography_path= './input/block2_topo.dat'
+btp(2)%profile_path= './input/fault_topo.dat',
 btp(2)%material_path(1) = '/home/kduru/Material/OK_homog_lambda_B2',
 btp(2)%material_path(2) = '/home/kduru/Material/OK_homog_mu_B2', 
 btp(2)%material_path(3) = '/home/kduru/Material/OK_homog_rho_B2'/
@@ -61,13 +67,11 @@ btp(2)%material_path(3) = '/home/kduru/Material/OK_homog_rho_B2'/
  order = 4 /
 
 !---begin:tensor_listU---
-'LOH_discontinuity' 0.1d0 0d0 0d0 0d0 0d0 0d0 0d0 1d3 -5d0 0d0 0d0 0
+'cosine' 0.2d0 0d0 0d0 0d0 0d0 0d0 10d0 0d0 -5d0 1.8d0 -5d0 0
 !---end:tensor_listU---
 
 !---begin:tensor_listV---
-'LOH_discontinuity' 0.1d0 0d0 0d0 0d0 0d0 0d0 0d0 1d3 -5d0 0d0 0d0 0
 !---end:tensor_listV---  
-
 
 &mms_list
  use_mms = F /
@@ -75,30 +79,26 @@ btp(2)%material_path(3) = '/home/kduru/Material/OK_homog_rho_B2'/
 &output_list
  output_exact_moment = F,
  output_seismograms = T,
- output_fault_topo = F, 
+ output_fault_topo = F,
  output_fields_block1 = F,
  output_fields_block2 = F,
- stride_fields = 1 /
+ stride_fields = 1,
+ station_xyz_index = T,
+ station_list = 'exfile',
+ station_list_file = 'station_list.txt',
+ station_file_directory = 'dat_3up_100m',
+ output_station_info = F
+ /
 
-!---begin:station_listU---
- -5d0 -10d0 0d0
- -5d0 -10d0 2d0
- -2.5d0 -10d0 2d0 
- -2.5d0 -10d0 -2d0
- -7.5d0 -10d0 2d0
- -7.5d0 -10d0 -2d0
-!---end:station_listU---
-
-!---begin:station_listV---
- 5d0 -10d0 0d0
- 5d0 -10d0 2d0
- 2.5d0 -10d0 -2d0 
- 2.5d0 -10d0 2d0
- 7.5d0 -10d0 2d0
- 7.5d0 -10d0 -2d0
-!---end:station_listV---
-
-
+&plane_output_list
+  enable_plane_output = T,
+  nplanes = 1,
+  plane_axis = 'qs',
+  plane_coord = 1, 
+  plane_name = 'plane_3up_y0', 
+  plane_stride = 1,
+  plane_file_directory = 'plane'
+/
 
 
 
